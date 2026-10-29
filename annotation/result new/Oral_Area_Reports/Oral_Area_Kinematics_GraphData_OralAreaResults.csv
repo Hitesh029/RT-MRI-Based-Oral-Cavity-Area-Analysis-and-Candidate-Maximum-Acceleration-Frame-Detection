@@ -1,0 +1,11 @@
+Metric,ReportedResult,EvidenceSource,Status
+Input MAT file,Oral_Area_Kinematics_GraphData.mat,Batch summary / MAT-file metadata,Reported
+Frames loaded,62,Area vector length: areaPixels,Reported
+Valid area frames,62/62,areaPixels,Reported
+Maximum area,161.179526 pixel^2 at frame 7,areaPixels,Reported
+Minimum area,61.441332 pixel^2 at frame 54,areaPixels,Reported
+Maximum signed acceleration,75.468323 pixel^2/frame^2 at frame 34,Batch script finite-difference calculation,Computed; verify against project method
+Maximum absolute acceleration,75.468323 pixel^2/frame^2 at frame 34 (signed 75.468323),Batch script finite-difference calculation,Computed; verify against project method
+Minimum acceleration,-69.205582 pixel^2/frame^2 at frame 33,Batch script finite-difference calculation,Computed; verify against project method
+Frame/time of selected event,Max positive: frame 34; max absolute: frame 34,Acceleration output table,Frame index; timestamp not set
+Peak sensitivity,Not evaluated,Requires a defined sensitivity experiment,Not evaluated

@@ -1,0 +1,9 @@
+Dataset,TotalFrames,ValidFrames,FailedFrames,MinArea_pixel2,MinAreaFrame,MaxArea_pixel2,MaxAreaFrame,MeanArea_pixel2,MedianArea_pixel2
+M1_034_temp,55,0,55,NaN,NaN,NaN,NaN,NaN,NaN
+M1_400,78,0,78,NaN,NaN,NaN,NaN,NaN,NaN
+M2_034_temp,62,0,62,NaN,NaN,NaN,NaN,NaN,NaN
+M2_358,72,0,72,NaN,NaN,NaN,NaN,NaN,NaN
+M2_400_temp,82,0,82,NaN,NaN,NaN,NaN,NaN,NaN
+M3_034_temp,61,0,61,NaN,NaN,NaN,NaN,NaN,NaN
+M4_034_temp,60,0,60,NaN,NaN,NaN,NaN,NaN,NaN
+M5_034_temp,64,0,64,NaN,NaN,NaN,NaN,NaN,NaN

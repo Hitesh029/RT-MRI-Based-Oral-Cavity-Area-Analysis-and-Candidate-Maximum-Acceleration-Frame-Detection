@@ -1,0 +1,9 @@
+dataset,inputFile,totalFrames,validAreaFrames,failedFrames,minArea,maxArea,maxAreaFrame,runStatus,errorMessage
+M1_034,D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result\M1_034_temp.mat,55,54,1,75.7591970977154,184.840005448131,21,COMPLETED,
+M1_400,D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result\M1_400.mat,78,77,1,82.3269676663538,215.516566419882,48,COMPLETED,
+M2_034,D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result\M2_034_temp.mat,62,62,0,61.4413318917876,161.17952551107,7,COMPLETED,
+M2_358,D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result\M2_358.mat,72,72,0,69.8986868159235,168.711767635661,49,COMPLETED,
+M2_400,D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result\M2_400_temp.mat,82,81,1,72.8687666273887,159.508172147417,42,COMPLETED,
+M3_034,D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result\M3_034_temp.mat,61,61,0,109.043690213397,212.568119485948,3,COMPLETED,
+M4_034,D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result\M4_034_temp.mat,60,59,1,53.7086150133417,235.652950145399,21,COMPLETED,
+M5_034,D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result\M5_034_temp.mat,64,64,0,88.144509264612,246.215935430611,21,COMPLETED,

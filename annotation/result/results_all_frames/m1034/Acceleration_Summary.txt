@@ -1,0 +1,19 @@
+ORAL AREA KINEMATIC ANALYSIS
+============================
+
+dt = 1 s/frame
+Smoothing window requested = 7
+Smoothing window used = 7
+
+Maximum positive acceleration
+Frame = 25
+Time = 24 s
+Area = 115.511614265 pixel^2
+Acceleration = 14.1107163218 pixel^2/s^2
+
+Maximum acceleration magnitude
+Frame = 21
+Time = 20 s
+Area = 184.840005448 pixel^2
+Signed acceleration = -21.8574426474 pixel^2/s^2
+Magnitude = 21.8574426474 pixel^2/s^2

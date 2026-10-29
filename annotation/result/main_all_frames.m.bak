@@ -1,0 +1,191 @@
+%% main_all_frames.m
+% Run the established C1/C2 detection solution on every MRI frame
+% and display each result sequentially in one figure.
+%
+% Required project functions:
+% loadData, preprocessData, identifyC1, identifyC2,
+% findC1Start, findC2Start, findC1End, findC2End,
+% validatePoints, saveResults
+
+clear; clc; close all;
+
+%% CONFIGURATION
+matFilePath = fullfile(pwd, 'M3_034_temp.mat');
+frameDelay = 5;                 % seconds each frame remains visible
+tolerancePx = 3.0;
+outDir = fullfile(pwd, 'results_all_frames');
+showRawContours = false;        % set true to show raw contours instead
+
+if ~isfile(matFilePath)
+    error('MAT file not found: %s', matFilePath);
+end
+if ~exist(outDir, 'dir')
+    mkdir(outDir);
+end
+
+% Read number of frames from the annotation data.
+S = load(matFilePath, 'annotation');
+if ~isfield(S, 'annotation') || isempty(S.annotation)
+    error('MAT file does not contain a nonempty annotation variable.');
+end
+nFrames = numel(S.annotation);
+
+fprintf('MAT file: %s\nTotal frames: %d\n', matFilePath, nFrames);
+fprintf('Display duration: %.1f seconds/frame\n', frameDelay);
+fprintf('Press Ctrl+C in the Command Window to stop.\n');
+
+fig = figure('Color','k', 'Name','All-frame C1/C2 detection', ...
+    'NumberTitle','off', 'Visible','on');
+ax = axes('Parent',fig);
+
+% Store per-frame results; failed frames remain marked as failed.
+results = cell(nFrames,1);
+status = strings(nFrames,1);
+
+for frameIdx = 1:nFrames
+    fprintf('\n========== FRAME %d / %d ==========\n', frameIdx, nFrames);
+    cla(ax);
+    title(ax, sprintf('Processing frame %d / %d ...', frameIdx, nFrames), ...
+        'Color','w');
+    drawnow;
+
+    try
+        %% Load frame
+        data = loadData(matFilePath, frameIdx);
+        if isempty(data.L) || any(~isfinite(data.L))
+            error('Frame %d has missing/invalid L.', frameIdx);
+        end
+        if ~isfield(data,'image') || isempty(data.image)
+            error('Frame %d has no MRI image in loadData output.', frameIdx);
+        end
+        if isempty(data.VEL_manual) || any(~isfinite(data.VEL_manual))
+            error('Frame %d has missing/invalid manual VEL.', frameIdx);
+        end
+
+        L = double(data.L(:)).';
+        VEL_manual = double(data.VEL_manual(:)).';
+        MRI = data.image;
+        C1raw = data.C1; C2raw = data.C2; C3raw = data.C3;
+
+        %% Preprocess and identify contours
+        C1p = preprocessData(C1raw, 'C1');
+        C2p = preprocessData(C2raw, 'C2');
+        if ~isempty(C3raw)
+            C3p = preprocessData(C3raw, 'C3');
+        else
+            C3p = [];
+        end
+        C1 = identifyC1(C1p);
+        C2 = identifyC2(C2p);
+
+        %% Anatomical axis: L toward manual VEL
+        axisVec = VEL_manual - L;
+        axisNorm = norm(axisVec);
+        if axisNorm < eps
+            error('Frame %d: L and manual VEL cannot define an axis.', frameIdx);
+        end
+        axisA = axisVec / axisNorm;
+
+        %% Detect four points using the existing solution
+        [UL, idxUL, tauUL] = findC1Start(C1, L, axisA);
+        [LL, idxLL, tauLL] = findC2Start(C2, L, axisA);
+        [VEL, velIdx, gapDist] = ...
+            findC1End(C1, C3p, tolerancePx, VEL_manual);
+        [C2end, idxC2end, tauC2end, tangentVec] = ...
+            findC2End(C1, C2, VEL, velIdx);
+
+        [isValid, statusTable] = ...
+            validatePoints(C1, C2, UL, LL, VEL, C2end);
+
+        %% Draw original MRI and detected contours/landmarks
+        imagesc(ax, MRI);
+        colormap(ax, gray(256));
+        axis(ax, 'image');
+        hold(ax, 'on');
+
+        if showRawContours
+            plotContour(ax, C1raw, 'r-', 'C1 raw');
+            plotContour(ax, C2raw, 'g-', 'C2 raw');
+            plotContour(ax, C3raw, 'c-', 'C3 raw');
+        else
+            plotContour(ax, C1, 'r-', 'C1');
+            plotContour(ax, C2, 'g-', 'C2');
+            plotContour(ax, C3p, 'c-', 'C3');
+        end
+
+        plotPoint(ax, UL, 'y*', 'UL');
+        plotPoint(ax, LL, 'y+', 'LL');
+        plotPoint(ax, VEL, 'b*', 'VEL');
+        plotPoint(ax, C2end, 'mo', 'C2 END');
+
+        title(ax, sprintf('Frame %d / %d | %s', frameIdx, nFrames, ...
+            chooseText(isValid,'VALID','VALIDATION WARNING')), ...
+            'Color','w','FontWeight','bold');
+        xlabel(ax,'X'); ylabel(ax,'Y');
+        set(ax,'YDir','reverse','Color','k','XColor','w','YColor','w');
+        xlim(ax,[0.5 size(MRI,2)+0.5]);
+        ylim(ax,[0.5 size(MRI,1)+0.5]);
+        hold(ax,'off');
+        drawnow;
+
+        %% Save frame result
+        saveResults(outDir, frameIdx, statusTable, UL, LL, VEL, C2end);
+        results{frameIdx} = struct( ...
+            'UL',UL,'LL',LL,'VEL',VEL,'C2end',C2end, ...
+            'idxUL',idxUL,'tauUL',tauUL, ...
+            'idxLL',idxLL,'tauLL',tauLL, ...
+            'velIdx',velIdx,'gapDist',gapDist, ...
+            'idxC2end',idxC2end,'tauC2end',tauC2end, ...
+            'tangentVec',tangentVec,'isValid',isValid);
+        status(frameIdx) = chooseText(isValid,'VALID','VALIDATION WARNING');
+        fprintf('Frame %d completed: UL, LL, VEL, C2 END detected.\n', frameIdx);
+        fprintf('  UL=(%.3f, %.3f), LL=(%.3f, %.3f)\n', UL, LL);
+        fprintf('  VEL=(%.3f, %.3f), C2 END=(%.3f, %.3f)\n', VEL, C2end);
+
+    catch ME
+        status(frameIdx) = "FAILED";
+        results{frameIdx} = struct('error', ME.message);
+        cla(ax);
+        % Show MRI even if detection fails, so the sequence continues visibly.
+        try
+            if exist('MRI','var') && ~isempty(MRI)
+                imagesc(ax, MRI); colormap(ax,gray(256)); axis(ax,'image');
+                set(ax,'YDir','reverse');
+            end
+        catch
+        end
+        title(ax, sprintf('Frame %d / %d | DETECTION FAILED', frameIdx, nFrames), ...
+            'Color','w','FontWeight','bold');
+        drawnow;
+        warning('Frame %d failed: %s', frameIdx, ME.message);
+    end
+
+    pause(frameDelay);
+end
+
+save(fullfile(outDir,'all_frames_detection_summary.mat'), ...
+    'results','status','matFilePath','frameDelay','tolerancePx');
+fprintf('\nAll frames processed. Valid/Warning: %d, Failed: %d\n', ...
+    sum(status=="VALID" | status=="VALIDATION WARNING"), sum(status=="FAILED"));
+fprintf('Summary saved in: %s\n', outDir);
+
+%% Local plotting helpers
+function plotContour(ax, C, style, label)
+    if isnumeric(C) && size(C,2)==2 && ~isempty(C)
+        plot(ax,C(:,1),C(:,2),style,'LineWidth',1.5,'DisplayName',label);
+    end
+end
+
+function plotPoint(ax, p, style, label)
+    if isnumeric(p) && numel(p)==2 && all(isfinite(p(:)))
+        p=double(p(:));
+        plot(ax,p(1),p(2),style,'MarkerSize',11,'LineWidth',2, ...
+            'DisplayName',label);
+        text(ax,p(1)+1,p(2),label,'Color',style(1), ...
+            'FontWeight','bold','FontSize',8,'Clipping','on');
+    end
+end
+
+function out = chooseText(condition, a, b)
+    if condition, out=a; else, out=b; end
+end

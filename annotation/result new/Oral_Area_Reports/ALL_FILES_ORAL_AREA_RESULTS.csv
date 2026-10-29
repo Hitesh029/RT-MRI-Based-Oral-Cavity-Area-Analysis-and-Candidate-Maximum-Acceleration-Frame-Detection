@@ -1,0 +1,121 @@
+InputFile,Metric,ReportedResult,EvidenceSource,Status
+F3_027_temp.mat,Input MAT file,F3_027_temp.mat,MAT-file metadata,Reported
+F3_027_temp.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+F3_027_temp.mat,Valid area frames,Not available,No recognised area vector,To compute
+F3_027_temp.mat,Maximum area,Not available,No recognised area vector,To compute
+F3_027_temp.mat,Minimum area,Not available,No recognised area vector,To compute
+F3_027_temp.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+F3_027_temp.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+F3_027_temp.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+F3_027_temp.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+F3_027_temp.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+F5_034_temp.mat,Input MAT file,F5_034_temp.mat,MAT-file metadata,Reported
+F5_034_temp.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+F5_034_temp.mat,Valid area frames,Not available,No recognised area vector,To compute
+F5_034_temp.mat,Maximum area,Not available,No recognised area vector,To compute
+F5_034_temp.mat,Minimum area,Not available,No recognised area vector,To compute
+F5_034_temp.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+F5_034_temp.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+F5_034_temp.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+F5_034_temp.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+F5_034_temp.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+M1_034_temp.mat,Input MAT file,M1_034_temp.mat,MAT-file metadata,Reported
+M1_034_temp.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+M1_034_temp.mat,Valid area frames,Not available,No recognised area vector,To compute
+M1_034_temp.mat,Maximum area,Not available,No recognised area vector,To compute
+M1_034_temp.mat,Minimum area,Not available,No recognised area vector,To compute
+M1_034_temp.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+M1_034_temp.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+M1_034_temp.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+M1_034_temp.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+M1_034_temp.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+M1_400.mat,Input MAT file,M1_400.mat,MAT-file metadata,Reported
+M1_400.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+M1_400.mat,Valid area frames,Not available,No recognised area vector,To compute
+M1_400.mat,Maximum area,Not available,No recognised area vector,To compute
+M1_400.mat,Minimum area,Not available,No recognised area vector,To compute
+M1_400.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+M1_400.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+M1_400.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+M1_400.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+M1_400.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+M1_400_temp.mat,Input MAT file,M1_400_temp.mat,MAT-file metadata,Reported
+M1_400_temp.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+M1_400_temp.mat,Valid area frames,Not available,No recognised area vector,To compute
+M1_400_temp.mat,Maximum area,Not available,No recognised area vector,To compute
+M1_400_temp.mat,Minimum area,Not available,No recognised area vector,To compute
+M1_400_temp.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+M1_400_temp.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+M1_400_temp.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+M1_400_temp.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+M1_400_temp.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+M2_034_temp.mat,Input MAT file,M2_034_temp.mat,MAT-file metadata,Reported
+M2_034_temp.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+M2_034_temp.mat,Valid area frames,Not available,No recognised area vector,To compute
+M2_034_temp.mat,Maximum area,Not available,No recognised area vector,To compute
+M2_034_temp.mat,Minimum area,Not available,No recognised area vector,To compute
+M2_034_temp.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+M2_034_temp.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+M2_034_temp.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+M2_034_temp.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+M2_034_temp.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+M2_358.mat,Input MAT file,M2_358.mat,MAT-file metadata,Reported
+M2_358.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+M2_358.mat,Valid area frames,Not available,No recognised area vector,To compute
+M2_358.mat,Maximum area,Not available,No recognised area vector,To compute
+M2_358.mat,Minimum area,Not available,No recognised area vector,To compute
+M2_358.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+M2_358.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+M2_358.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+M2_358.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+M2_358.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+M2_400_temp.mat,Input MAT file,M2_400_temp.mat,MAT-file metadata,Reported
+M2_400_temp.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+M2_400_temp.mat,Valid area frames,Not available,No recognised area vector,To compute
+M2_400_temp.mat,Maximum area,Not available,No recognised area vector,To compute
+M2_400_temp.mat,Minimum area,Not available,No recognised area vector,To compute
+M2_400_temp.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+M2_400_temp.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+M2_400_temp.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+M2_400_temp.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+M2_400_temp.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+M3_034_temp.mat,Input MAT file,M3_034_temp.mat,MAT-file metadata,Reported
+M3_034_temp.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+M3_034_temp.mat,Valid area frames,Not available,No recognised area vector,To compute
+M3_034_temp.mat,Maximum area,Not available,No recognised area vector,To compute
+M3_034_temp.mat,Minimum area,Not available,No recognised area vector,To compute
+M3_034_temp.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+M3_034_temp.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+M3_034_temp.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+M3_034_temp.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+M3_034_temp.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+M4_034_temp.mat,Input MAT file,M4_034_temp.mat,MAT-file metadata,Reported
+M4_034_temp.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+M4_034_temp.mat,Valid area frames,Not available,No recognised area vector,To compute
+M4_034_temp.mat,Maximum area,Not available,No recognised area vector,To compute
+M4_034_temp.mat,Minimum area,Not available,No recognised area vector,To compute
+M4_034_temp.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+M4_034_temp.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+M4_034_temp.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+M4_034_temp.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+M4_034_temp.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+M5_034_temp.mat,Input MAT file,M5_034_temp.mat,MAT-file metadata,Reported
+M5_034_temp.mat,Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+M5_034_temp.mat,Valid area frames,Not available,No recognised area vector,To compute
+M5_034_temp.mat,Maximum area,Not available,No recognised area vector,To compute
+M5_034_temp.mat,Minimum area,Not available,No recognised area vector,To compute
+M5_034_temp.mat,Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+M5_034_temp.mat,Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+M5_034_temp.mat,Minimum acceleration,Not available,Acceleration output unavailable,To compute
+M5_034_temp.mat,Frame/time of selected event,Not available,No verified peak event,To compute
+M5_034_temp.mat,Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate
+Oral_Area_Kinematics_GraphData.mat,Input MAT file,Oral_Area_Kinematics_GraphData.mat,Batch summary / MAT-file metadata,Reported
+Oral_Area_Kinematics_GraphData.mat,Frames loaded,62,Area vector length: areaPixels,Reported
+Oral_Area_Kinematics_GraphData.mat,Valid area frames,62/62,areaPixels,Reported
+Oral_Area_Kinematics_GraphData.mat,Maximum area,161.179526 pixel^2 at frame 7,areaPixels,Reported
+Oral_Area_Kinematics_GraphData.mat,Minimum area,61.441332 pixel^2 at frame 54,areaPixels,Reported
+Oral_Area_Kinematics_GraphData.mat,Maximum signed acceleration,75.468323 pixel^2/frame^2 at frame 34,Batch script finite-difference calculation,Computed; verify against project method
+Oral_Area_Kinematics_GraphData.mat,Maximum absolute acceleration,75.468323 pixel^2/frame^2 at frame 34 (signed 75.468323),Batch script finite-difference calculation,Computed; verify against project method
+Oral_Area_Kinematics_GraphData.mat,Minimum acceleration,-69.205582 pixel^2/frame^2 at frame 33,Batch script finite-difference calculation,Computed; verify against project method
+Oral_Area_Kinematics_GraphData.mat,Frame/time of selected event,Max positive: frame 34; max absolute: frame 34,Acceleration output table,Frame index; timestamp not set
+Oral_Area_Kinematics_GraphData.mat,Peak sensitivity,Not evaluated,Requires a defined sensitivity experiment,Not evaluated

@@ -1,0 +1,10 @@
+
+BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:TCS HackQuest Season 11 Round 1
+DESCRIPTION:Hi Hitesh Choukiker, \n\nRound 1 of the 11th season of TCS HackQuest will be happening on 05th December 2026, Saturday.\nThe event will start at 10:00 AM IST and will end at 4:00 PM IST.\n\nThe event will be held online at https://hackquest.tcsapps.com/.\n\nThe username is your TCS NextStep reference number (CT/DT ID) - DT20256585561\nYou have registered using the email - choukikerhitesh@gmail.com\n\nIn case you forget the password, use the forgot password option to reset the password.\n\nAll the best!\nTeam TCS HackQuest\n
+DTSTART:20261205T043000Z
+DTEND:20261205T103000Z
+END:VEVENT
+END:VCALENDAR

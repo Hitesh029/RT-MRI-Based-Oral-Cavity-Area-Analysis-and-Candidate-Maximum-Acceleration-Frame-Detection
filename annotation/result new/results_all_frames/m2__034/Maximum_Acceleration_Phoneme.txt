@@ -1,0 +1,19 @@
+MAXIMUM ACCELERATION PHONEME ANALYSIS
+====================================
+TXT file = D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result new\034.txt
+Alignment mode = normalized_sequence
+TXT duration = 2.630000000 s
+
+Maximum positive acceleration
+MRI frame = 18 / 62
+Aligned audio time = 0.732950820 s
+Phoneme = s
+Phoneme interval = 0.730000000 - 0.760000000 s
+Word = NOT AVAILABLE (TXT contains phoneme timing only)
+
+Maximum absolute acceleration
+MRI frame = 6 / 62
+Aligned audio time = 0.215573770 s
+Phoneme = b
+Phoneme interval = 0.200000000 - 0.230000000 s
+Word = NOT AVAILABLE (TXT contains phoneme timing only)

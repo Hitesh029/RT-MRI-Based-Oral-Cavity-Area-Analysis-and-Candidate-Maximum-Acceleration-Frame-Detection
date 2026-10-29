@@ -1,0 +1,11 @@
+File,Frames,ValidAreaFrames,MaxArea_pixel2,MaxAreaFrame,MinArea_pixel2,MinAreaFrame,MaxSignedAcceleration,MaxSignedAccelerationFrame,Status,Notes
+M1_034_temp.mat,55,55,55,7,1,43,78,6,AREA_FOUND,Area variable=randind; max abs accel=101 at frame 7; min accel=-101 at frame 7
+M1_400.mat,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NO_AREA_VECTOR,Area vector not found or ambiguous; inspect variable list
+M1_400_temp.mat,78,78,78,19,1,61,117,8,AREA_FOUND,Area variable=randind; max abs accel=130 at frame 60; min accel=-130 at frame 60
+M2_034_temp.mat,62,62,62,15,1,49,99,29,AREA_FOUND,Area variable=randind; max abs accel=105 at frame 30; min accel=-105 at frame 30
+M2_358.mat,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NO_AREA_VECTOR,Area vector not found or ambiguous; inspect variable list
+M2_400_temp.mat,82,82,82,66,1,64,117,8,AREA_FOUND,Area variable=randind; max abs accel=130 at frame 63; min accel=-130 at frame 63
+M3_034_temp.mat,61,61,61,41,1,48,99,28,AREA_FOUND,Area variable=randind; max abs accel=105 at frame 29; min accel=-105 at frame 29
+M4_034_temp.mat,60,60,60,14,1,47,99,28,AREA_FOUND,Area variable=randind; max abs accel=105 at frame 29; min accel=-105 at frame 29
+M5_034_temp.mat,64,64,64,28,1,57,110,57,AREA_FOUND,Area variable=randind; max abs accel=116 at frame 56; min accel=-116 at frame 56
+Oral_Area_Kinematics_GraphData.mat,62,62,161.17952551107,7,61.4413318917876,54,75.4683231805638,34,AREA_FOUND,Area variable=areaPixels; max abs accel=75.4683 at frame 34; min accel=-69.2056 at frame 33

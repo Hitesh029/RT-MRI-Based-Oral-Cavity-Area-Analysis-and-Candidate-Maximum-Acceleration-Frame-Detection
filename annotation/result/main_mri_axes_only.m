@@ -1,0 +1,595 @@
+%% main.m
+% ================================================================
+% C1 / C2 ANATOMICAL POINT DETECTION
+% ================================================================
+%
+% Systematic implementation of:
+%
+%   Input MRI Frame
+%        |
+%        v
+%   Load Annotation
+%        |
+%        v
+%   Preprocess C1/C2/C3
+%        |
+%        v
+%   Identify C1 / C2
+%        |
+%        v
+%   Compute Anatomical Axis
+%        |
+%        +---- L -> Manual VEL
+%        |
+%        v
+%   Find C1 Start -> UL
+%        |
+%        v
+%   Find C2 Start -> LL
+%        |
+%        v
+%   Find C1 End -> VEL
+%        |
+%        v
+%   Find C2 End
+%        |
+%        v
+%   Validate
+%        |
+%        v
+%   Visualize on ORIGINAL MRI FRAME
+%        |
+%        v
+%   Save Results
+%
+% IMPORTANT:
+%   - No arbitrary anchor point is used.
+%   - Anatomical axis is defined from L toward manual VEL.
+%   - Original MRI image is displayed underneath contours.
+%   - Visualization contains NO contour-point circles.
+%
+% ================================================================
+clear;
+clc;
+close all;
+%% ================================================================
+% CONFIGURATION
+% ================================================================
+matFilePath = fullfile(pwd, 'M2_034_temp.mat');
+% Frame to process
+frameIdx = 1;
+% Maximum allowed C1-C3 junction gap
+tolerancePx = 3.0;
+% Output directory
+outDir = 'results';
+%% ================================================================
+% START
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('        C1 / C2 ANATOMICAL POINT DETECTION\n');
+fprintf('============================================================\n');
+fprintf('\n');
+fprintf('MAT file : %s\n', matFilePath);
+fprintf('Frame    : %d\n', frameIdx);
+fprintf('\n');
+%% ================================================================
+% INPUT DATA -> LOAD DATA
+% ================================================================
+fprintf('============================================================\n');
+fprintf('                    LOAD DATA\n');
+fprintf('============================================================\n');
+data = loadData(matFilePath, frameIdx);
+%% ================================================================
+% CHECK L
+% ================================================================
+if isempty(data.L) || any(~isfinite(data.L))
+      error('main:missingL', ...
+          ['No valid L landmark found for frame %d. ' ...
+           'Provide valid manual UL/LL landmarks so L can be computed.'], ...
+          frameIdx);
+end
+%% ================================================================
+% EXTRACT DATA
+% ================================================================
+L     = data.L;
+C1raw = data.C1;
+C2raw = data.C2;
+C3raw = data.C3;
+%% ================================================================
+% CHECK ORIGINAL MRI FRAME
+% ================================================================
+if ~isfield(data, 'image') || isempty(data.image)
+      error('main:noMRIFrame', ...
+          ['Original MRI frame is not available. ' ...
+           'Make sure the MAT file contains variable ''imgs''.']);
+end
+MRI = data.image;
+fprintf('\n');
+fprintf('Original MRI frame loaded: %d x %d\n', ...
+      size(MRI,1), size(MRI,2));
+%% ================================================================
+% PREPROCESSING
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('                    PREPROCESSING\n');
+fprintf('============================================================\n');
+% ------------------------------------------------
+% C1
+% ------------------------------------------------
+C1p = preprocessData(C1raw, 'C1');
+% ------------------------------------------------
+% C2
+% ------------------------------------------------
+C2p = preprocessData(C2raw, 'C2');
+% ------------------------------------------------
+% C3
+% ------------------------------------------------
+if ~isempty(C3raw)
+      C3p = preprocessData(C3raw, 'C3');
+else
+      C3p = [];
+end
+%% ================================================================
+% IDENTIFY C1 / C2
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('                 IDENTIFY C1 / C2\n');
+fprintf('============================================================\n');
+C1 = identifyC1(C1p);
+C2 = identifyC2(C2p);
+%% ================================================================
+% COMPUTE ANATOMICAL VOCAL-TRACT AXIS
+% ================================================================
+%
+% The anatomical axis is NOT based on an arbitrary coordinate.
+%
+% It is defined as:
+%
+%       L  --->  Manual VEL
+%
+% This same axis is used for:
+%
+%       C1 start detection
+%       C2 start detection
+%
+% The anterior reference line is perpendicular to this axis.
+%
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('              ANATOMICAL VOCAL-TRACT AXIS\n');
+fprintf('============================================================\n');
+% ------------------------------------------------
+% Check manual VEL
+% ------------------------------------------------
+if isempty(data.VEL_manual) || ...
+          any(~isfinite(data.VEL_manual))
+      error('main:missingVEL', ...
+          ['Manual VEL landmark is required to define the ' ...
+           'anatomical vocal-tract axis.']);
+end
+% ------------------------------------------------
+% Manual VEL
+% ------------------------------------------------
+VEL_manual = data.VEL_manual;
+% ------------------------------------------------
+% Axis vector
+% ------------------------------------------------
+axisVec = VEL_manual - L;
+% ------------------------------------------------
+% Axis length
+% ------------------------------------------------
+axisNorm = norm(axisVec);
+if axisNorm < eps
+      error('main:invalidAxis', ...
+          ['L and manual VEL are too close to define a valid ' ...
+           'anatomical axis.']);
+end
+% ------------------------------------------------
+% Unit anatomical axis
+% ------------------------------------------------
+axisA = axisVec / axisNorm;
+% ------------------------------------------------
+% Print axis information
+% ------------------------------------------------
+fprintf('\n');
+fprintf('L          = (%.3f, %.3f)\n', ...
+      L(1), L(2));
+fprintf('VEL_manual = (%.3f, %.3f)\n', ...
+      VEL_manual(1), VEL_manual(2));
+fprintf('Axis a     = (%.4f, %.4f)\n', ...
+      axisA(1), axisA(2));
+fprintf('Axis norm  = %.4f\n', ...
+      axisNorm);
+fprintf('\n');
+fprintf('Axis definition:\n');
+fprintf('    L  --->  Manual VEL\n');
+fprintf('\n');
+fprintf('============================================================\n');
+%% ================================================================
+% FIND C1 STARTING POINT
+% ================================================================
+%
+% UL = Upper Lip
+%
+% C1 start is found by the intersection of C1 with the anterior
+% reference line passing through L and perpendicular to axisA.
+%
+% No arbitrary nearest-point selection is used.
+%
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('                  FIND C1 START (UL)\n');
+fprintf('============================================================\n');
+[UL, idxUL, tauUL] = ...
+      findC1Start(C1, L, axisA);
+fprintf('\n');
+fprintf('Detected UL:\n');
+fprintf('    X = %.4f\n', UL(1));
+fprintf('    Y = %.4f\n', UL(2));
+fprintf('\n');
+%% ================================================================
+% FIND C2 STARTING POINT
+% ================================================================
+%
+% LL = Lower Lip
+%
+% SAME anterior reference line is used for C2.
+%
+% ================================================================
+fprintf('============================================================\n');
+fprintf('                  FIND C2 START (LL)\n');
+fprintf('============================================================\n');
+[LL, idxLL, tauLL] = ...
+      findC2Start(C2, L, axisA);
+fprintf('\n');
+fprintf('Detected LL:\n');
+fprintf('    X = %.4f\n', LL(1));
+fprintf('    Y = %.4f\n', LL(2));
+fprintf('\n');
+%% ================================================================
+% FIND C1 ENDING POINT
+% ================================================================
+%
+% VEL = Velum / posterior C1 endpoint
+%
+% C1 endpoint is determined from the C1/C3 junction.
+%
+% ================================================================
+fprintf('============================================================\n');
+fprintf('                  FIND C1 END (VEL)\n');
+fprintf('============================================================\n');
+[VEL, velIdx, gapDist] = ...
+      findC1End(C1, C3p, tolerancePx, data.VEL_manual);
+fprintf('\n');
+fprintf('Detected VEL:\n');
+fprintf('    X = %.4f\n', VEL(1));
+fprintf('    Y = %.4f\n', VEL(2));
+fprintf('\n');
+fprintf('C1-C3 junction gap = %.4f px\n', ...
+      gapDist);
+fprintf('\n');
+%% ================================================================
+% FIND C2 ENDING POINT
+% ================================================================
+%
+% C2 END is determined using the local tangent at VEL and the
+% corresponding perpendicular cutting line.
+%
+% ================================================================
+fprintf('============================================================\n');
+fprintf('                  FIND C2 END\n');
+fprintf('============================================================\n');
+[C2end, idxC2end, tauC2end, tangentVec] = ...
+      findC2End( ...
+          C1, ...
+          C2, ...
+          VEL, ...
+          velIdx);
+fprintf('\n');
+fprintf('Detected C2 END:\n');
+fprintf('    X = %.4f\n', ...
+      C2end(1));
+fprintf('    Y = %.4f\n', ...
+      C2end(2));
+fprintf('\n');
+fprintf('C1 local tangent at VEL:\n');
+fprintf('    Tx = %.4f\n', ...
+      tangentVec(1));
+fprintf('    Ty = %.4f\n', ...
+      tangentVec(2));
+fprintf('\n');
+%% ================================================================
+% VALIDATE ALL FOUR POINTS
+% ================================================================
+%
+% Points:
+%
+%   UL
+%   LL
+%   VEL
+%   C2end
+%
+% ================================================================
+fprintf('============================================================\n');
+fprintf('                 VALIDATION\n');
+fprintf('============================================================\n');
+[isValid, statusTable] = ...
+      validatePoints( ...
+          C1, ...
+          C2, ...
+          UL, ...
+          LL, ...
+          VEL, ...
+          C2end);
+fprintf('\n');
+disp(statusTable);
+%% ================================================================
+% VISUALIZATION
+% ================================================================
+%
+% IMPORTANT:
+%
+% All visualization is performed on the ORIGINAL MRI frame.
+%
+% The MRI image is the background.
+%
+% C1/C2/C3 are overlaid as continuous lines.
+%
+% Selected anatomical points are shown using:
+%
+%       \*
+%       +
+%       x
+%
+% NO circular contour-point markers are used.
+%
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('                 VISUALIZATION\n');
+fprintf('============================================================\n');
+% ------------------------------------------------
+% 1. Original MRI + raw contours
+% ------------------------------------------------
+visualizeInput( ...
+      MRI, ...
+      C1raw, ...
+      C2raw, ...
+      C3raw);
+% ------------------------------------------------
+% 2. C1 / UL / VEL
+% ------------------------------------------------
+visualizeC1( ...
+      MRI, ...
+      C1, ...
+      L, ...
+      axisA, ...
+      UL, ...
+      idxUL, ...
+      VEL, ...
+      velIdx);
+% ------------------------------------------------
+% 3. C2 / LL / C2 END
+% ------------------------------------------------
+visualizeC2( ...
+      MRI, ...
+      C2, ...
+      L, ...
+      axisA, ...
+      LL, ...
+      idxLL, ...
+      VEL, ...
+      tangentVec, ...
+      C2end, ...
+      idxC2end);
+% ------------------------------------------------
+% 4. FINAL RESULT
+% ------------------------------------------------
+visualizeFinalResult( ...
+      MRI, ...
+      C1, ...
+      C2, ...
+      C3p, ...
+      UL, ...
+      LL, ...
+      VEL, ...
+      C2end);
+fprintf('\n');
+fprintf('Visualization complete.\n');
+% Tighten MRI figures: keep X/Y axes, remove top/right borders and
+% minimize the white margin outside the MRI image.
+formatMRIVisualizationFigures();
+%% ================================================================
+% FINAL RESULT TABLE
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('                 FINAL RESULT TABLE\n');
+fprintf('============================================================\n');
+disp(statusTable);
+fprintf('============================================================\n');
+%% ================================================================
+% SAVE RESULTS
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('                   SAVE RESULTS\n');
+fprintf('============================================================\n');
+saveResults( ...
+      outDir, ...
+      frameIdx, ...
+      statusTable, ...
+      UL, ...
+      LL, ...
+      VEL, ...
+      C2end);
+fprintf('\n');
+fprintf('Results saved to: %s\n', ...
+      outDir);
+%% ================================================================
+% FINAL STATUS
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+if isValid
+      fprintf('                         SUCCESS\n');
+      fprintf('============================================================\n');
+      fprintf('\n');
+      fprintf('All four anatomical points were found and validated.\n');
+      fprintf('\n');
+      fprintf('Frame = %d\n', frameIdx);
+      fprintf('\n');
+else
+      fprintf('                         WARNING\n');
+      fprintf('============================================================\n');
+      fprintf('\n');
+      fprintf(['Detection completed, but validation reported ' ...
+          'warnings.\n']);
+      fprintf('\n');
+      fprintf('Check the validation table above.\n');
+      fprintf('\n');
+      fprintf('Frame = %d\n', frameIdx);
+      fprintf('\n');
+end
+%% ================================================================
+% MANUAL VS CALCULATED VEL CHECK
+% ================================================================
+fprintf('============================================================\n');
+fprintf('                 VEL COMPARISON\n');
+fprintf('============================================================\n');
+fprintf('Manual VEL:\n');
+fprintf('    (%.3f, %.3f)\n', ...
+      data.VEL_manual(1), ...
+      data.VEL_manual(2));
+fprintf('\n');
+fprintf('Calculated VEL:\n');
+fprintf('    (%.3f, %.3f)\n', ...
+      VEL(1), ...
+      VEL(2));
+fprintf('\n');
+VELdifference = ...
+      norm(VEL - data.VEL_manual);
+fprintf('Difference:\n');
+fprintf('    %.3f px\n', ...
+      VELdifference);
+fprintf('============================================================\n');
+%% ================================================================
+% DETECTION SUMMARY
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('                 DETECTION SUMMARY\n');
+fprintf('============================================================\n');
+% ------------------------------------------------
+% Four final points
+% ------------------------------------------------
+fprintf('\n');
+fprintf('UL:\n');
+fprintf('    (%.4f, %.4f)\n', ...
+      UL(1), UL(2));
+fprintf('\n');
+fprintf('LL:\n');
+fprintf('    (%.4f, %.4f)\n', ...
+      LL(1), LL(2));
+fprintf('\n');
+fprintf('VEL:\n');
+fprintf('    (%.4f, %.4f)\n', ...
+      VEL(1), VEL(2));
+fprintf('\n');
+fprintf('C2 END:\n');
+fprintf('    (%.4f, %.4f)\n', ...
+      C2end(1), C2end(2));
+% ------------------------------------------------
+% Bracket / interpolation information
+% ------------------------------------------------
+fprintf('\n');
+fprintf('------------------------------------------------------------\n');
+fprintf('UL bracket index:\n');
+fprintf('    [%d, %d]\n', ...
+      idxUL(1), ...
+      idxUL(2));
+fprintf('UL interpolation:\n');
+fprintf('    %.6f\n', ...
+      tauUL);
+fprintf('\n');
+fprintf('LL bracket index:\n');
+fprintf('    [%d, %d]\n', ...
+      idxLL(1), ...
+      idxLL(2));
+fprintf('LL interpolation:\n');
+fprintf('    %.6f\n', ...
+      tauLL);
+fprintf('\n');
+fprintf('VEL index:\n');
+fprintf('    %d\n', ...
+      velIdx);
+fprintf('\n');
+fprintf('C1-C3 VEL gap:\n');
+fprintf('    %.4f px\n', ...
+      gapDist);
+fprintf('\n');
+fprintf('C2 END bracket:\n');
+fprintf('    [%d, %d]\n', ...
+      idxC2end(1), ...
+      idxC2end(2));
+fprintf('C2 END interpolation:\n');
+fprintf('    %.6f\n', ...
+      tauC2end);
+fprintf('============================================================\n');
+%% ================================================================
+% COMPLETE
+% ================================================================
+fprintf('\n');
+fprintf('============================================================\n');
+fprintf('                    MAIN COMPLETE\n');
+fprintf('============================================================\n');
+fprintf('\n');
+%% ================================================================
+% LOCAL FIGURE FORMATTING FUNCTION
+% ================================================================
+function formatMRIVisualizationFigures()
+% Only format axes that contain an image, so console/results figures
+% and any non-MRI plots are not changed.
+figs = findall(0, 'Type', 'figure');
+for fi = 1:numel(figs)
+    fig = figs(fi);
+    axesList = findall(fig, 'Type', 'axes');
+    for ai = 1:numel(axesList)
+        ax = axesList(ai);
+        % Do not alter axes that do not contain an MRI image.
+        imageHandles = findall(ax, 'Type', 'image');
+        if isempty(imageHandles)
+            continue;
+        end
+        % Get image pixel dimensions from the image object's CData.
+        imageData = get(imageHandles(1), 'CData');
+        if isempty(imageData) || ndims(imageData) < 2
+            continue;
+        end
+        imageHeight = size(imageData, 1);
+        imageWidth  = size(imageData, 2);
+        % Keep only left and bottom axes (remove top/right box borders).
+        set(ax, 'Box', 'off', ...
+                'TickDir', 'out', ...
+                'Layer', 'top', ...
+                'XLim', [0.5, imageWidth + 0.5], ...
+                'YLim', [0.5, imageHeight + 0.5], ...
+                'YDir', 'reverse', ...
+                'DataAspectRatio', [1 1 1], ...
+                'PlotBoxAspectRatioMode', 'auto');
+        % Reduce outer whitespace while preserving axis labels and ticks.
+        set(ax, 'Units', 'normalized');
+        ti = get(ax, 'TightInset');
+        set(ax, 'Position', [max(ti(1), 0.06), max(ti(2), 0.10), ...
+            1 - max(ti(1), 0.06) - max(ti(3), 0.03), ...
+            1 - max(ti(2), 0.10) - max(ti(4), 0.03)]);
+        set(ax, 'LooseInset', max(ti, 0.01));
+    end
+    set(fig, 'Color', 'w', 'InvertHardcopy', 'off');
+end
+end

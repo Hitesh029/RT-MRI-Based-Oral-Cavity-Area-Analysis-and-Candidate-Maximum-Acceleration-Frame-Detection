@@ -1,0 +1,4 @@
+FRAME ERROR LOG
+MAT file: D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result new\M2_034_temp.mat
+Total frames: 62
+

@@ -1,0 +1,11 @@
+Metric,ReportedResult,EvidenceSource,Status
+Input MAT file,M1_034_temp.mat,MAT-file metadata,Reported
+Frames loaded,Not available,MAT-file metadata / area vector unavailable,To verify
+Valid area frames,Not available,No recognised area vector,To compute
+Maximum area,Not available,No recognised area vector,To compute
+Minimum area,Not available,No recognised area vector,To compute
+Maximum signed acceleration,Not available,Acceleration output unavailable,To compute
+Maximum absolute acceleration,Not available,Acceleration output unavailable,To compute
+Minimum acceleration,Not available,Acceleration output unavailable,To compute
+Frame/time of selected event,Not available,No verified peak event,To compute
+Peak sensitivity,Not evaluated,Sensitivity experiment required,To evaluate

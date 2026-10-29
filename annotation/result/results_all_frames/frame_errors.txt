@@ -1,0 +1,10 @@
+FRAME ERROR LOG
+MAT file: D:\Downloads\IISC INTERNSHIP\Annotation-gui\Annotation-gui\annotation\result\M1_034_temp.mat
+Total frames: 55
+
+=============================================
+FRAME 32 / 55 FAILED
+=============================================
+Error using main_all_frames_oral_area_area_finalcalculation (line 107)
+Frame 32 has missing/invalid L.
+

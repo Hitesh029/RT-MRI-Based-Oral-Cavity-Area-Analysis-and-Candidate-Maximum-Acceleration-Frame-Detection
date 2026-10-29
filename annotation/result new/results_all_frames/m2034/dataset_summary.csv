@@ -1,0 +1,2 @@
+Dataset,TotalFrames,ValidAreaFrames,MissingOrInvalidAreaFrames,ValidDetectionFrames,ValidationWarningFrames,FailedFrames,FramesRequiringReview
+M2_034_temp.mat,62,62,0,62,0,0,23
